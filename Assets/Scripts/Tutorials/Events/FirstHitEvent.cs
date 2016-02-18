@@ -15,6 +15,7 @@
         private void OnHit() {
             if (!_fired) {
                 OnFired();
+                GameLogic2d.Instance.IsInputEnabled = true;
                 _fired = true;
             }
         }

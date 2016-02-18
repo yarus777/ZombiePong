@@ -18,6 +18,8 @@
         public float gameIncrementSpeed = 0.01f;
         public float GameSpeed { get; private set; }
 
+        public bool IsInputEnabled { get; set; }
+
         [Tooltip("This Is The Score When Game Is Playing")]
         private int _currentScore;
 
@@ -52,7 +54,9 @@
         #region PLAYER INPUT
 
         void HandlePlayerInput() {
-            _paddlePivot.ChangeDirection();
+            if (IsInputEnabled) {
+                _paddlePivot.ChangeDirection();
+            }
         }
 
         #endregion
@@ -64,6 +68,7 @@
             GameSpeed = initialGameSpeed;
             OnStateChanged(State.Game);
             if (!_tutorial.IsFirstRun) {
+                IsInputEnabled = true;
                 Pause();
                 PopupsController.Instance.Show(PopupType.GetReady);
             } else {
