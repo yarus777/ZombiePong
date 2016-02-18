@@ -35,4 +35,9 @@ public class SoundToggle : MonoBehaviour
         Debug.Log("IsSoundChecked" + isChecked);
 
     }
+
+    public void BtnPressed()
+    {
+        SoundManager.Instance.Play(FxType.MenuButton);
+    }
 }

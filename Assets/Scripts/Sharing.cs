@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts {
+﻿using Assets.Scripts.Effects;
+
+namespace Assets.Scripts {
     using System.Collections;
     using Game;
     using UnityEngine;
@@ -20,6 +22,7 @@
 
         public void OnAndroidMediaSharingClick() {
 #if UNITY_ANDROID
+            SoundManager.Instance.Play(FxType.MenuButton);
             Application.CaptureScreenshot(screenshotFilename);
             StartCoroutine(SaveAndShare(screenshotFilename));
 #endif
@@ -27,9 +30,10 @@
 
         public void OniOSMediaSharingClick() {
 #if UNITY_IPHONE
+        SoundManager.Instance.Play(FxType.MenuButton);
 		StartCoroutine(ShareProcess());
 #endif
-        }
+                                             }
 
         IEnumerator ShareProcess() {
             yield return new WaitForEndOfFrame();

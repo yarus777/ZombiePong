@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts.Tutorials {
+﻿using Assets.Scripts.Effects;
+
+namespace Assets.Scripts.Tutorials {
     using System;
     using UnityEngine;
 
@@ -15,6 +17,7 @@
         }
 
         public void Complete() {
+            SoundManager.Instance.Play(FxType.MenuButton);
             _onShowed(this);
         }
     }
