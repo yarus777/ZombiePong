@@ -6,7 +6,7 @@
     using UnityEngine;
 
     class Tutorial : MonoBehaviour {
-        private const string FIRST_START_KEY = "firstStart";
+        public const string FIRST_START_KEY = "firstStart";
 
         [SerializeField]
         private TutorialItem[] _steps;
@@ -30,7 +30,7 @@
             if (!IsFirstRun) {
                 return;
             }
-            PlayerPrefs.SetInt(FIRST_START_KEY, 1);
+
             _stepsQueue = new Queue<TutorialItem>(_steps);
             _activeSteps = new List<TutorialStep>();
             var firstStep = _stepsQueue.Dequeue();

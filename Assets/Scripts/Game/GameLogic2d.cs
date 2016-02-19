@@ -101,6 +101,7 @@
             PopupsController.Instance.Show(PopupType.GameOver);
 
             FullScreenHandler.ShowAds();
+            PlayerPrefs.SetInt(Tutorial.FIRST_START_KEY, 1);
         }
 
         #region State
