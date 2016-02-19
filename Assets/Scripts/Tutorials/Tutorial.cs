@@ -19,12 +19,11 @@
         public event Action StepBecameActive;
         public event Action StepBecameInactive;
 
-        public bool IsFirstRun { get; private set; }
+        public bool IsFirstRun { get { return PlayerPrefs.GetInt(FIRST_START_KEY, 0) == 0; } }
 
         private Queue<TutorialItem> _stepsQueue;
 
         private void Awake() {
-            IsFirstRun = PlayerPrefs.GetInt(FIRST_START_KEY, 0) == 0;
             Debug.Log("First: " + IsFirstRun);
             if (!IsFirstRun) {
                 return;
