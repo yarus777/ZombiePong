@@ -11,12 +11,17 @@
         [SerializeField]
         private TutorialItem[] _steps;
 
+        [SerializeField]
+        private GameObject _shade;
+
         private List<TutorialStep> _activeSteps;
 
         public event Action StepBecameActive;
         public event Action StepBecameInactive;
 
         public bool IsFirstRun { get; private set; }
+
+        private Queue<TutorialItem> _stepsQueue;
 
         private void Awake() {
             IsFirstRun = PlayerPrefs.GetInt(FIRST_START_KEY, 0) == 0;
@@ -25,15 +30,18 @@
                 return;
             }
             PlayerPrefs.SetInt(FIRST_START_KEY, 1);
+            _stepsQueue = new Queue<TutorialItem>(_steps);
             _activeSteps = new List<TutorialStep>();
-            foreach (var step in _steps) {
-                var s = step;
-                step.Event.Fired += () => OnStepFired(s.Step);
-            }
+            var firstStep = _stepsQueue.Dequeue();
+            firstStep.Event.Fired += () => OnStepFired(firstStep);
+            //foreach (var step in _steps) {
+            //    var s = step;
+            //    step.Event.Fired += () => OnStepFired(s.Step);
+            //}
         }
 
-        private void OnStepFired(TutorialStep step) {
-            Show(step);
+        private void OnStepFired(TutorialItem step) {
+            Show(step.Step);
         }
 
         private void Show(TutorialStep step) {
@@ -58,9 +66,15 @@
             } else {
                 PopupsController.Instance.Show(PopupType.GetReady);
             }
+            if (_stepsQueue.Count > 0) {
+                var nextStep = _stepsQueue.Dequeue();
+                nextStep.Event.Fired += () => OnStepFired(nextStep);
+            }
         }
 
         private void UpdateShade() {
+            // todo обновить состояние затемнения
+            _shade.SetActive(_activeSteps.Count > 0);
         }
 
         [Serializable]
