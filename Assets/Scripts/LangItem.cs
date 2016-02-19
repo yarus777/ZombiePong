@@ -13,8 +13,7 @@
         PointsText1,
         PointsText2,
         PointsText3,
-        FirtsStartText,
-        GetReady
+        GetReadyText
     }
 
     public enum Language {
@@ -35,8 +34,7 @@
             {"points","очко"},
             {"points","очков"},
             {"points","очка"},
-            {"Some text to firts launch the game","Некторый текст для отображения при первом запуске игры"},
-            {"Get Ready!", "Вы готовы?"}
+            {"Are you ready?", "Вы готовы?"}
         };
 
         public static string GetText (WhatText what)
