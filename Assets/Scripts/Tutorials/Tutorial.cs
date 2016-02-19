@@ -19,7 +19,9 @@
         public event Action StepBecameActive;
         public event Action StepBecameInactive;
 
-        public bool IsFirstRun { get { return PlayerPrefs.GetInt(FIRST_START_KEY, 0) == 0; } }
+        public bool IsFirstRun {
+            get { return PlayerPrefs.GetInt(FIRST_START_KEY, 0) == 0; }
+        }
 
         private Queue<TutorialItem> _stepsQueue;
 
@@ -68,6 +70,8 @@
             if (_stepsQueue.Count > 0) {
                 var nextStep = _stepsQueue.Dequeue();
                 nextStep.Event.Fired += () => OnStepFired(nextStep);
+            } else {
+                UpdateShade();
             }
         }
 
