@@ -13,7 +13,10 @@
         PointsText1,
         PointsText2,
         PointsText3,
-        GetReadyText
+        GetReadyText,
+        TutorailText1,
+        TutorailText2,
+        TutorailText3
     }
 
     public enum Language {
@@ -34,7 +37,10 @@
             {"points","очко"},
             {"points","очков"},
             {"points","очка"},
-            {"Are you ready?", "Вы готовы?"}
+            {"Are you ready?", "Вы готовы?"},
+            {"Tap to help Zombie to catch the eye.", "Нажимай на экран, чтобы помочь Зомби не потерять выпавший глаз."},
+            {"Tap to change the hand's direction. Catching of the eye is your goal!", "Нажми и измени направление руки. Твоя цель поймать глаз!"},
+            {"Zombie mustn't lose his eye in space! Keep it inside his space suit.", "Помоги зомби не потерять его глаз в открытом космосе! Удержи его в скафандре."}
         };
 
         public static string GetText (WhatText what)
