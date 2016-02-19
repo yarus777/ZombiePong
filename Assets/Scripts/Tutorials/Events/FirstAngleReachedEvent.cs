@@ -1,7 +1,6 @@
 ﻿namespace Assets.Scripts.Tutorials.Events {
     using Game;
     using UnityEngine;
-    using UnityEngine.UI;
 
     class FirstAngleReachedEvent : TutorialEvent {
         private const float TOLERANCE = 3f;
