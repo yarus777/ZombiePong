@@ -28,6 +28,8 @@ namespace Assets.Scripts.Game {
         private Rigidbody2D rb; // CACHED RIGIDBODY 2D
         public event Action Hit;
 
+        private int hit_count;
+
         void Awake() {
             tr = GetComponent<Transform>();
             rb = GetComponent<Rigidbody2D>();
@@ -69,7 +71,16 @@ namespace Assets.Scripts.Game {
                         moveDirection.Normalize();
 
                         // UPDATE SCORE
+
                         GameLogic2d.Instance.AddScore(1);
+                        hit_count++;
+
+                        Debug.Log("HitCount" + hit_count);
+                        if (hit_count == 3)
+                        {
+                            Currency.Instance.AddCoins();
+                            hit_count = 0;
+                        }
 
                         spriteAnimation.Play("BallHit");
                         OnHit();
@@ -87,6 +98,7 @@ namespace Assets.Scripts.Game {
             // GAME IS OVER IF THE BALL EXITS CIRCLE
             if (__c.CompareTag("INSIDECIRCLE")) {
                 GameOver();
+                hit_count = 0;               
             }
         }
 
