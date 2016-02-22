@@ -1,37 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
-using UnityEngine.UI;
+﻿namespace Assets.Scripts.Currency {
+    using System;
+    using UnityEngine;
 
-
-
-    class Currency : MonoBehaviour
-    {
-        public static Currency Instance;
-        public Text coins;
+    class Currency : UnitySingleton<Currency> {
+        private const string KEY = "coins_currency";
         private int coins_currency;
 
-        void Awake()
-        {
-            Instance = this;
-            coins_currency = PlayerPrefs.GetInt("coins_currency", 0);
-            coins.text = "" + coins_currency;
+        public int CoinsCount {
+            get { return coins_currency; }
+            private set {
+                coins_currency = value;
+                OnCoinCountChanged();
+                Save();
+            }
         }
 
-        public void AddCoins()
-        {
-          
-                coins_currency = coins_currency + 2;
-                coins.text = "" + coins_currency;
+        protected override void LateAwake() {
+            base.LateAwake();
+            Load();
+        }
 
-                PlayerPrefs.SetInt("coins_currency", coins_currency);
-                PlayerPrefs.Save();
+        public void AddCoins() {
+            CoinsCount += 2;
+        }
+
+        private void Load() {
+            CoinsCount = PlayerPrefs.GetInt(KEY, 0);
+        }
+
+        private void Save() {
+            PlayerPrefs.SetInt(KEY, CoinsCount);
+            PlayerPrefs.Save();
+        }
+
+        public event Action<int> CoinCountChanged;
+
+        private void OnCoinCountChanged() {
+            if (CoinCountChanged != null) {
+                CoinCountChanged(CoinsCount);
             }
-
-
-
-
+        }
     }
-
+}

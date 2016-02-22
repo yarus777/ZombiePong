@@ -4,6 +4,7 @@
 
 namespace Assets.Scripts.Game {
     using System;
+    using Currency;
     using Effects;
     using UnityEngine;
     using Random = UnityEngine.Random;
@@ -76,8 +77,7 @@ namespace Assets.Scripts.Game {
                         hit_count++;
 
                         Debug.Log("HitCount" + hit_count);
-                        if (hit_count == 3)
-                        {
+                        if (hit_count == 3) {
                             Currency.Instance.AddCoins();
                             hit_count = 0;
                         }
@@ -98,7 +98,7 @@ namespace Assets.Scripts.Game {
             // GAME IS OVER IF THE BALL EXITS CIRCLE
             if (__c.CompareTag("INSIDECIRCLE")) {
                 GameOver();
-                hit_count = 0;               
+                hit_count = 0;
             }
         }
 
