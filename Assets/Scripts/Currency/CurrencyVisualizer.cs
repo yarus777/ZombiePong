@@ -6,8 +6,12 @@
         [SerializeField]
         private Text _coinsCount;
 
+        private Currency _currency;
+
         private void Awake() {
-            Currency.Instance.CoinCountChanged += OnCoinCountChanged;
+            _currency = Currency.Instance;
+            _currency.CoinCountChanged += OnCoinCountChanged;
+            OnCoinCountChanged(_currency.CoinsCount);
         }
 
         private void OnCoinCountChanged(int currentCount) {
@@ -15,7 +19,7 @@
         }
 
         private void OnDestroy() {
-            Currency.Instance.CoinCountChanged -= OnCoinCountChanged;
+            _currency.CoinCountChanged -= OnCoinCountChanged;
         }
     }
 }
