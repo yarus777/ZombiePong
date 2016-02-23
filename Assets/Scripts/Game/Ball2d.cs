@@ -77,7 +77,7 @@ namespace Assets.Scripts.Game {
                         hit_count++;
 
                         Debug.Log("HitCount" + hit_count);
-                        if (hit_count == 3) {
+                        if (hit_count == 10) {
                             Currency.Instance.AddCoins();
                             hit_count = 0;
                         }
