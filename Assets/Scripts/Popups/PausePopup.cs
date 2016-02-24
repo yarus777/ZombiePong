@@ -1,6 +1,5 @@
-﻿using Assets.Scripts.Effects;
-
-namespace Assets.Scripts.Popups {
+﻿namespace Assets.Scripts.Popups {
+    using Effects;
     using Game;
     using UnityEngine;
     using UnityEngine.UI;
