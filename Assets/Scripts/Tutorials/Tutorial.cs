@@ -35,10 +35,6 @@
             _activeSteps = new List<TutorialStep>();
             var firstStep = _stepsQueue.Dequeue();
             firstStep.Event.Fired += () => OnStepFired(firstStep);
-            //foreach (var step in _steps) {
-            //    var s = step;
-            //    step.Event.Fired += () => OnStepFired(s.Step);
-            //}
         }
 
         private void OnStepFired(TutorialItem step) {
@@ -76,7 +72,6 @@
         }
 
         private void UpdateShade() {
-            // todo обновить состояние затемнения
             _shade.SetActive(_activeSteps.Count > 0);
         }
 

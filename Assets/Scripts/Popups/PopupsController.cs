@@ -2,6 +2,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Game;
     using UnityEngine;
 
     internal enum PopupType {
@@ -49,8 +50,11 @@
 
         private void Update() {
             if ((Input.GetKeyDown(KeyCode.Escape)) || Input.GetKeyDown(KeyCode.Backspace)) {
-                if (_popupsStack.Count > 0) {
-                    Close();
+                if (GameLogic2d.Instance != null && !GameLogic2d.Instance.IsTutorialActive) {
+                    Show(PopupType.Pause);
+                } else if (_popupsStack.Count > 0) {
+                    var popup = _popupsStack.Peek();
+                    popup.OnBackClick();
                 }
             }
         }

@@ -24,5 +24,9 @@
             SoundManager.Instance.Play(FxType.MenuButton);
             Application.LoadLevel("Menu");
         }
+
+        public override void OnBackClick() {
+            Resume();
+        }
     }
 }

@@ -9,16 +9,18 @@
 
         public enum State {
             Game,
-            GameOver
+            GameOver,
+            Init
         }
 
-        private State _state;
+        public State GameState { get; private set; }
 
         public float initialGameSpeed = 0.8f;
         public float gameIncrementSpeed = 0.01f;
         public float GameSpeed { get; private set; }
 
         public bool IsInputEnabled { get; set; }
+        public bool IsTutorialActive { get; private set; }
 
         [Tooltip("This Is The Score When Game Is Playing")]
         private int _currentScore;
@@ -38,8 +40,18 @@
             Instance = this;
             Application.targetFrameRate = 60;
             _ball.Lost += GameOver;
-            _tutorial.StepBecameActive += Pause;
-            _tutorial.StepBecameInactive += ResumeGame;
+            _tutorial.StepBecameActive += OnTutorialBecameActive;
+            _tutorial.StepBecameInactive += OnTutorialBecameInactive;
+        }
+
+        private void OnTutorialBecameActive() {
+            Pause();
+            IsTutorialActive = true;
+        }
+
+        private void OnTutorialBecameInactive() {
+            ResumeGame();
+            IsTutorialActive = false;
         }
 
         void Start() {
@@ -66,7 +78,7 @@
         private void StartGame() {
             _currentScore = 0;
             GameSpeed = initialGameSpeed;
-            OnStateChanged(State.Game);
+            OnStateChanged(State.Init);
             if (!_tutorial.IsFirstRun) {
                 IsInputEnabled = true;
                 Pause();
@@ -74,6 +86,11 @@
             } else {
                 ResumeGame();
             }
+        }
+
+        public void StartPlaying() {
+            OnStateChanged(State.Game);
+            ResumeGame();
         }
 
 
@@ -111,10 +128,10 @@
         public event StateChangedDelegate StateChanged;
 
         private void OnStateChanged(State state) {
-            _state = state;
+            GameState = state;
             var handler = StateChanged;
             if (handler != null) {
-                handler(_state);
+                handler(GameState);
             }
         }
 

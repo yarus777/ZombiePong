@@ -4,7 +4,10 @@
     class GetReadyPopup : Popup {
         public override void Close() {
             base.Close();
-            GameLogic2d.Instance.ResumeGame();
+            GameLogic2d.Instance.StartPlaying();
+        }
+
+        public override void OnBackClick() {
         }
     }
 }

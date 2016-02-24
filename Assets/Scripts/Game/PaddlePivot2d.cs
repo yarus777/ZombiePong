@@ -3,44 +3,53 @@
     using UnityEngine;
 
     class PaddlePivot2d : MonoBehaviour {
-        public float rotateDirection; // ROTATION DIRECTION
         public float rotateSpeed = 5f; // ROTATION SPEED
 
         [SerializeField]
         private float _initialRotation;
 
+        private float _rotateDirection; // ROTATION DIRECTION
+
         private Transform _transform; // CACHED TRANSFORM
 
         void Awake() {
             _transform = GetComponent<Transform>();
-            GameLogic2d.Instance.StateChanged += state => {
-                switch (state) {
-                    case GameLogic2d.State.GameOver:
-                        rotateDirection = 0f;
-                        break;
-                    case GameLogic2d.State.Game:
-                        Init();
-                        break;
-                }
-            };
-            Init();
+            GameLogic2d.Instance.StateChanged += OnGameStateChanged;
+            //Init();
+        }
+
+        private void OnGameStateChanged(GameLogic2d.State state) {
+            switch (state) {
+                case GameLogic2d.State.GameOver:
+                    _rotateDirection = 0f;
+                    break;
+                case GameLogic2d.State.Game:
+                    Init();
+                    break;
+                case GameLogic2d.State.Init:
+                    InitPosition();
+                    break;
+            }
+        }
+
+        private void InitPosition() {
+            _transform.rotation = Quaternion.Euler(0, 0, _initialRotation);
         }
 
         private void Init() {
-            _transform.rotation = Quaternion.Euler(0, 0, _initialRotation);
-            rotateDirection = 1f;
+            _rotateDirection = 1f;
         }
 
         private void FixedUpdate() {
-            if (rotateDirection > 0f) {
+            if (_rotateDirection > 0f) {
                 _transform.Rotate(Vector3.forward, -rotateSpeed*GameLogic2d.Instance.GameSpeed*Time.deltaTime);
-            } else if (rotateDirection < 0f) {
+            } else if (_rotateDirection < 0f) {
                 _transform.Rotate(Vector3.forward, rotateSpeed*GameLogic2d.Instance.GameSpeed*Time.deltaTime);
             }
         }
 
         public void ChangeDirection() {
-            rotateDirection *= -1f;
+            _rotateDirection *= -1f;
             OnRotated();
         }
 

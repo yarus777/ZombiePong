@@ -20,6 +20,9 @@ namespace Assets.Scripts.Game {
         [SerializeField]
         private float ballSpeed; // CURRENT SPEED
 
+        [SerializeField]
+        private Vector2 _initialPosition;
+
         private float lastTimeHitPaddle; // STORE LAST TIME THE BALL HITS PADDLE
 
         private Vector2 moveDirection; // DIRECTION
@@ -31,15 +34,22 @@ namespace Assets.Scripts.Game {
 
         private int hit_count;
 
+        private GameLogic2d _game;
+
+        public float Speed {
+            get { return ballSpeed; }
+        }
+
         void Awake() {
             tr = GetComponent<Transform>();
             rb = GetComponent<Rigidbody2D>();
             GetComponent<CircleCollider2D>();
-            GameLogic2d.Instance.StateChanged += OnStateChanged;
+            _game = GameLogic2d.Instance;
+            _game.StateChanged += OnStateChanged;
         }
 
         private void OnStateChanged(GameLogic2d.State state) {
-            if (state == GameLogic2d.State.Game) {
+            if (state == GameLogic2d.State.Init) {
                 OnGameStart();
             }
         }
@@ -47,7 +57,7 @@ namespace Assets.Scripts.Game {
         void FixedUpdate() {
             if (isAlive) {
                 // KEEP THE SPEED OF THE BALL
-                rb.velocity = moveDirection*ballSpeed*GameLogic2d.Instance.GameSpeed*Time.deltaTime;
+                rb.velocity = moveDirection*ballSpeed*_game.GameSpeed*Time.deltaTime;
             } else {
                 rb.velocity = Vector2.zero;
             }

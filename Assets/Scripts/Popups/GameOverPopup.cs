@@ -25,6 +25,10 @@
             _loadLevel.LoadingLevel("Menu");
         }
 
+        public override void OnBackClick() {
+            Restart();
+        }
+
 
         public void Restart() {
             Close();

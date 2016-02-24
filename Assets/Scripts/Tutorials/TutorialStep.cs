@@ -1,7 +1,6 @@
-﻿using Assets.Scripts.Effects;
-
-namespace Assets.Scripts.Tutorials {
+﻿namespace Assets.Scripts.Tutorials {
     using System;
+    using Effects;
     using UnityEngine;
 
     class TutorialStep : MonoBehaviour {

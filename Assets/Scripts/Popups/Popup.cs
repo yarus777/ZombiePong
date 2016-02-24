@@ -7,7 +7,10 @@
         }
 
         public virtual void OnShow() {
+        }
 
+        public virtual void OnBackClick() {
+            Close();
         }
     }
 }

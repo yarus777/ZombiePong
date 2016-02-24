@@ -8,7 +8,7 @@ namespace Assets.Scripts.Popups {
             SoundManager.Instance.Play(FxType.MenuButton);
             base.Close();
             if (GameLogic2d.Instance != null) {
-                GameLogic2d.Instance.ResumeGame();
+                PopupsController.Instance.Show(PopupType.GetReady);
             }
         }
     }

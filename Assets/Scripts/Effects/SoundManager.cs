@@ -75,7 +75,6 @@
         }
 
         protected override void LateAwake() {
-            Debug.Log("LateAwake");
             base.LateAwake();
             _fxMapping = _fx.ToDictionary(x => x.Type, x => x.Source);
             Load();
