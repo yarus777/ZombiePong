@@ -1,6 +1,5 @@
-﻿using Assets.Scripts.Effects;
-
-namespace Assets.Scripts.Popups {
+﻿namespace Assets.Scripts.Popups {
+    using Effects;
     using Game;
     using UnityEngine;
     using UnityEngine.UI;
@@ -20,11 +19,10 @@ namespace Assets.Scripts.Popups {
             PopupsController.Instance.Show(PopupType.GetReady);
         }
 
-        public void Menu()
-        {
+        public void Menu() {
+            Close();
             SoundManager.Instance.Play(FxType.MenuButton);
             Application.LoadLevel("Menu");
         }
-
     }
 }

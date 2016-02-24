@@ -32,8 +32,8 @@
             GameLogic2d.Instance.RestartGame();
         }
 
-        public void Menu()
-        {
+        public void Menu() {
+            Close();
             SoundManager.Instance.Play(FxType.MenuButton);
             Application.LoadLevel("Menu");
         }
