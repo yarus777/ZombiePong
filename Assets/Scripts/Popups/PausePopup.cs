@@ -20,5 +20,11 @@ namespace Assets.Scripts.Popups {
             PopupsController.Instance.Show(PopupType.GetReady);
         }
 
+        public void Menu()
+        {
+            SoundManager.Instance.Play(FxType.MenuButton);
+            Application.LoadLevel("Menu");
+        }
+
     }
 }

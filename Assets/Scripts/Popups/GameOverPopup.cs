@@ -23,5 +23,11 @@ namespace Assets.Scripts.Popups {
             SoundManager.Instance.Play(FxType.MenuButton);
             GameLogic2d.Instance.RestartGame();
         }
+
+        public void Menu()
+        {
+            SoundManager.Instance.Play(FxType.MenuButton);
+            Application.LoadLevel("Menu");
+        }
     }
 }
