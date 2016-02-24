@@ -19,5 +19,6 @@ namespace Assets.Scripts.Popups {
             Close();
             PopupsController.Instance.Show(PopupType.GetReady);
         }
+
     }
 }
