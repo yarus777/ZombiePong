@@ -50,11 +50,13 @@
 
         private void Update() {
             if ((Input.GetKeyDown(KeyCode.Escape)) || Input.GetKeyDown(KeyCode.Backspace)) {
-                if (GameLogic2d.Instance != null && !GameLogic2d.Instance.IsTutorialActive) {
-                    Show(PopupType.Pause);
-                } else if (_popupsStack.Count > 0) {
+                if (_popupsStack.Count > 0) {
                     var popup = _popupsStack.Peek();
                     popup.OnBackClick();
+                } else if (GameLogic2d.Instance != null && !GameLogic2d.Instance.IsTutorialActive &&
+                           GameLogic2d.Instance.GameState == GameLogic2d.State.Game) {
+                    GameLogic2d.Instance.Pause();
+                    Show(PopupType.Pause);
                 }
             }
         }
