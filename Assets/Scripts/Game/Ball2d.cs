@@ -36,10 +36,6 @@ namespace Assets.Scripts.Game {
 
         private GameLogic2d _game;
 
-        public float Speed {
-            get { return ballSpeed; }
-        }
-
         void Awake() {
             tr = GetComponent<Transform>();
             rb = GetComponent<Rigidbody2D>();
@@ -49,17 +45,26 @@ namespace Assets.Scripts.Game {
         }
 
         private void OnStateChanged(GameLogic2d.State state) {
-            if (state == GameLogic2d.State.Init) {
+            if (state == GameLogic2d.State.Game) {
                 OnGameStart();
+            } else if (state == GameLogic2d.State.Init) {
+                OnGameInit();
             }
         }
 
+        //void FixedUpdate() {
+        //    if (!isAlive) {
+        //        rb.velocity = Vector2.zero;
+        //    } else {
+        //        // KEEP THE SPEED OF THE BALL
+        //        rb.velocity = moveDirection*ballSpeed*_game.GameSpeed*Time.deltaTime;
+        //    }
+        //}
+
         void FixedUpdate() {
-            if (isAlive) {
-                // KEEP THE SPEED OF THE BALL
-                rb.velocity = moveDirection*ballSpeed*_game.GameSpeed*Time.deltaTime;
-            } else {
-                rb.velocity = Vector2.zero;
+            var speed = rb.velocity.magnitude;
+            if (speed > 0) {
+                rb.velocity *= ballSpeed*_game.GameSpeed/speed;
             }
         }
 
@@ -70,33 +75,40 @@ namespace Assets.Scripts.Game {
             }
         }
 
-        void OnTriggerEnter2D(Collider2D __c) {
+
+        //void OnTriggerEnter2D(Collider2D __c) {
+        private void OnCollisionEnter2D(Collision2D c) {
             if (isAlive) {
                 // BALL HITS PADDLE
-                if (__c.CompareTag("PADDLE")) {
-                    Debug.Log("hit");
-                    if ((Time.time - lastTimeHitPaddle) > 0.1f) {
-                        // CHANGE DIRECTION TOWARD CENTER OF THE CIRCLE WITH AN ADDITIONAL RANDOM ANGLES
-                        moveDirection = Vector3.Reflect(moveDirection, new Vector3(0.2f, -1.3f, 0) - tr.position);
-                        moveDirection = Quaternion.Euler(0f, 0f, Random.Range(0f, 45f))*moveDirection;
-                        moveDirection.Normalize();
+                if (c.gameObject.CompareTag("PADDLE")) {
+                    // тут было 0.1
+                    if ((Time.time - lastTimeHitPaddle) > 0.18f) {
+                    // CHANGE DIRECTION TOWARD CENTER OF THE CIRCLE WITH AN ADDITIONAL RANDOM ANGLES
+                    //moveDirection = Vector3.Reflect(moveDirection, new Vector3(0.2f, -1.3f, 0) - tr.position);
+                    var centerDirection = _initialPosition - (Vector2) tr.localPosition;
+                    centerDirection.Normalize();
+                    moveDirection = Vector3.Reflect(moveDirection, centerDirection);
+                    // раскомментировать это для рандомизации
+                    moveDirection = Quaternion.Euler(0f, 0f, Random.Range(0, 5f))*moveDirection;
+                    moveDirection.Normalize();
 
-                        // UPDATE SCORE
+                    // UPDATE SCORE
 
-                        GameLogic2d.Instance.AddScore(1);
-                        hit_count++;
+                    GameLogic2d.Instance.AddScore(1);
+                    hit_count++;
 
-                        Debug.Log("HitCount" + hit_count);
-                        if (hit_count == 10) {
-                            Currency.Instance.AddCoins();
-                            hit_count = 0;
-                        }
+                    Debug.Log("" + hit_count);
 
-                        spriteAnimation.Play("BallHit");
-                        OnHit();
+                    if (hit_count == 10) {
+                        Currency.Instance.AddCoins();
+                        hit_count = 0;
+                    }
 
-                        //MusicManager.Instance.PlayGameBallHitPaddle ();
-                        SoundManager.Instance.Play(FxType.BallHit);
+                    spriteAnimation.Play("BallHit");
+                    OnHit();
+
+                    //MusicManager.Instance.PlayGameBallHitPaddle ();
+                    SoundManager.Instance.Play(FxType.BallHit);
                     }
 
                     lastTimeHitPaddle = Time.time;
@@ -104,9 +116,10 @@ namespace Assets.Scripts.Game {
             }
         }
 
+
         void OnTriggerExit2D(Collider2D __c) {
             // GAME IS OVER IF THE BALL EXITS CIRCLE
-            if (__c.CompareTag("INSIDECIRCLE")) {
+            if (isAlive && __c.CompareTag("INSIDECIRCLE")) {
                 GameOver();
                 hit_count = 0;
             }
@@ -114,9 +127,6 @@ namespace Assets.Scripts.Game {
 
         // CALL WHEN GAME STARTS
         private void OnGameStart() {
-            // PLACE THE BALL IN CENTER OF THE CIRCLE
-            tr.position = new Vector3(0.2f, -0.39f, 0);
-
             // THE BALL WILL MOVE IN UP DIRECTION AT START
             moveDirection = Vector2.up;
 
@@ -124,14 +134,20 @@ namespace Assets.Scripts.Game {
 
             // INITIAL MOVING SPEED
             ballSpeed = speedOnStart;
+            rb.velocity = new Vector2(0, speedOnStart);
 
-            // 
             isAlive = true;
+        }
+
+        private void OnGameInit() {
+            // PLACE THE BALL IN CENTER OF THE CIRCLE
+            (tr as RectTransform).anchoredPosition = _initialPosition; //new Vector3(0.2f, -0.39f, 0);
         }
 
         void GameOver() {
             if (isAlive) {
                 isAlive = false;
+                rb.velocity = Vector2.zero;
 
                 // GAMELOGIC2D HANDLES GAME OVER
                 if (Lost != null) {

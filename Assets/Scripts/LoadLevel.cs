@@ -13,6 +13,16 @@ namespace Assets.Scripts {
             SoundManager.Instance.Play(FxType.MenuButton);
             Application.LoadLevelAsync (level);
             playBtn.interactable = false;
+            AdSDK.AdSDK.SendEvent("start_btn_click");
         }
+
+        void Update()
+        {
+            if ((Input.GetKeyDown(KeyCode.Escape)) || (Input.GetKeyDown(KeyCode.Backspace)))
+            {
+                Application.Quit();
+            }
+        }
+
     }
 }

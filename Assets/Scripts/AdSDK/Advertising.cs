@@ -11,7 +11,7 @@ namespace Assets.Scripts.AdSDK {
 
         public static void ShowFullScreen(){
 #if UNITY_ANDROID
-		AdSDK.TryShowFullscreen ();
+            AdSDK.ShowFullscreen();
 #endif
 #if UNITY_IOS
     //Appodeal.show(Appodeal.INTERSTITIAL);

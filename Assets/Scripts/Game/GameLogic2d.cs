@@ -22,6 +22,10 @@
         public bool IsInputEnabled { get; set; }
         public bool IsTutorialActive { get; private set; }
 
+        public bool IsFirstRun {
+            get { return _tutorial.IsFirstRun; }
+        }
+
         [Tooltip("This Is The Score When Game Is Playing")]
         private int _currentScore;
 
@@ -36,12 +40,26 @@
 
         public event Action<int> ScoreChanged;
 
+        private bool _fired;
+
         void Awake() {
             Instance = this;
             Application.targetFrameRate = 60;
+            PlayerPrefs.SetString(UpdatePopup.PREV_SCENE_NAME_KEY, "game");
             _ball.Lost += GameOver;
             _tutorial.StepBecameActive += OnTutorialBecameActive;
             _tutorial.StepBecameInactive += OnTutorialBecameInactive;
+
+            _ball.Hit += OnFirstHit;
+        }
+
+        private void OnFirstHit()
+        {
+            if (!_fired)
+            {
+                GameLogic2d.Instance.IsInputEnabled = true;
+                _fired = true;
+            }
         }
 
         private void OnTutorialBecameActive() {
@@ -80,9 +98,10 @@
             GameSpeed = initialGameSpeed;
             OnStateChanged(State.Init);
             if (!_tutorial.IsFirstRun) {
-                IsInputEnabled = true;
+                IsInputEnabled = false;
                 Pause();
-                PopupsController.Instance.Show(PopupType.GetReady);
+                var popup = PopupsController.Instance.Show(PopupType.GetReady) as GetReadyPopup;
+                popup.IsGameJustStarted = true;
             } else {
                 ResumeGame();
             }
@@ -108,7 +127,9 @@
 
         #endregion
 
-        public void GameOver() {
+        public void GameOver()
+        {
+            _fired = false;
             var bestScore = GetBestScore();
             if (_currentScore > bestScore) {
                 SaveBestScore(_currentScore);
@@ -118,7 +139,29 @@
             PopupsController.Instance.Show(PopupType.GameOver);
 
             FullScreenHandler.ShowAds();
+
+            SendScoreEvent();
+            SendRoundEvent();
+   
             PlayerPrefs.SetInt(Tutorial.FIRST_START_KEY, 1);
+        }
+
+        private void SendScoreEvent()
+        {
+            var min = _currentScore - _currentScore%10;
+            var min1 = Math.Max(1, min);
+            var max = min + 10;
+            string score_to_send = string.Format("scores_{0:00000}-{1:00000}", min1, max);          
+            Debug.Log("ScoreToSend "+ score_to_send);
+            AdSDK.AdSDK.SendEvent(score_to_send);
+        }
+
+        private void SendRoundEvent()
+        {
+            LoseCounter.Instance.IncrementCount();
+            string round_to_send = String.Format("round_{0:00000000}", LoseCounter.Instance.lose_count);
+            Debug.Log("LoseRound " + round_to_send);
+            AdSDK.AdSDK.SendEvent(round_to_send);
         }
 
         #region State
@@ -159,7 +202,7 @@
 
             _currentScore += score;
             OnScoreChanged(_currentScore);
-            Debug.Log("Score" + _currentScore + "\n Game Speed: " + GameSpeed);
+            //Debug.Log("Score" + _currentScore + "\n Game Speed: " + GameSpeed);
         }
 
         private void OnScoreChanged(int score) {

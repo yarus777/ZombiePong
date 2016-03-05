@@ -61,7 +61,8 @@
                     handler();
                 }
             } else {
-                PopupsController.Instance.Show(PopupType.GetReady);
+                var popup = PopupsController.Instance.Show(PopupType.GetReady) as GetReadyPopup;
+                popup.IsGameJustStarted = true;
             }
             if (_stepsQueue.Count > 0) {
                 var nextStep = _stepsQueue.Dequeue();

@@ -17,7 +17,9 @@
 		TutorialText1,
 		TutorialText2,
 		TutorialText3,
-        PauseText
+        PauseText,
+        UpdateText,
+        UpdateButtonText
 		
     }
 
@@ -43,7 +45,9 @@
 			{"Tap to help Zombie to catch the eye.","Нажимай на экран, чтобы помочь Зомби не потерять выпавший глаз."},
 			{"Tap to change the hand's direction. Catching of the eye is your goal!","Нажми и измени направление руки. Твоя цель поймать глаз!"},
 			{"Zombie mustn't lose his eye in space! Keep it inside his space suit.","Помоги зомби не потерять его глаз в открытом космосе! Удержи его в скафандре."},
-            {"Pause","Пауза"}
+            {"Pause","Пауза"},           
+            {"New version is available! Download it here!","Доступна новая версия! Обновитесь здесь!"},
+            {"Update", "Обновить"}
         };
 
         public static string GetText (WhatText what)

@@ -81,16 +81,19 @@ namespace Assets.Scripts {
             intentObject.Call<AndroidJavaObject>("putExtra", intentClass.GetStatic<string>("EXTRA_TITLE"), "High Score ");
             var points = GameLogic2d.Instance.GetCurrentScore();
             string pointsText;
-            if (points%10 == 1) {
+            if (points % 10 == 1 && points != 11)
+            {
                 pointsText = Texts.GetText(WhatText.PointsText1);
-            } else if (points%10 == 2 || points%10 == 3 || points%10 == 4) {
+            }
+            else if (points % 10 == 2 && points != 12 || points % 10 == 3 && points != 13 || points % 10 == 4 && points != 14)
+            {
                 pointsText = Texts.GetText(WhatText.PointsText3);
             } else {
                 pointsText = Texts.GetText(WhatText.PointsText2);
             }
             var shareMessage =
                 string.Format(Texts.GetText(WhatText.ShareText) + " " + points + " " + pointsText +
-                              "\nhttps://play.google.com/store/apps/details?id=com.funbaster.kittypong");
+                              "\nhttps://play.google.com/store/apps/details?id=zombie.smash.evil");
             intentObject.Call<AndroidJavaObject>("putExtra", intentClass.GetStatic<string>("EXTRA_TEXT"), shareMessage);
 
             var uriClass = new AndroidJavaClass("android.net.Uri");

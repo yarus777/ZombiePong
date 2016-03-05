@@ -18,11 +18,15 @@
             base.OnShow();
             _scoreText.text = GameLogic2d.Instance.GetCurrentScore() + "";
             _highScoreText.text = GameLogic2d.Instance.GetBestScore() + "";
+            AdSDK.AdSDK.CreateBanner();
+            AdSDK.AdSDK.SetBannerVisible(true);
+
         }
 
         public void GoToMenu() {
             Close();
             _loadLevel.LoadingLevel("Menu");
+            AdSDK.AdSDK.SetBannerVisible(false);
         }
 
         public override void OnBackClick() {
@@ -34,12 +38,14 @@
             Close();
             SoundManager.Instance.Play(FxType.MenuButton);
             GameLogic2d.Instance.RestartGame();
+            AdSDK.AdSDK.SetBannerVisible(false);
         }
 
         public void Menu() {
             Close();
             SoundManager.Instance.Play(FxType.MenuButton);
             Application.LoadLevel("Menu");
+            AdSDK.AdSDK.SetBannerVisible(false);
         }
     }
 }

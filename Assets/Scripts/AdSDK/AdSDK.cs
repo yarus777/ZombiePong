@@ -1,10 +1,14 @@
-namespace Assets.Scripts.AdSDK {
-    using UnityEngine;
+using UnityEngine;
+using System.Collections;
 
-    public static class AdSDK {
+namespace Assets.Scripts.AdSDK {
+
+    public static class AdSDK
+    {
 #if UNITY_ANDROID
 
-        public enum GenderType {
+        public enum GenderType
+        {
             UNKNOWN,
             MALE,
             FEMALE
@@ -26,7 +30,8 @@ namespace Assets.Scripts.AdSDK {
 
         public static string flurryKey = "";
 
-        public enum BannerAlignment {
+        public enum BannerAlignment
+        {
             TOP = 0,
             BOTTOM = 1
         }
@@ -35,102 +40,61 @@ namespace Assets.Scripts.AdSDK {
 
         public static int bannerWidth;
         public static int bannerHeight;
-        private static bool bannerActive;
+        private static bool bannerActive = false;
 
 #if !UNITY_EDITOR
 	private static bool isFirstLaunch = true;
 	#endif
 
-        private static void Init(bool debug) {
-            MyDebug.Log("Init SDK");
+        private static void Init(bool debug)
+        {
+
+//		Debug.Log ("MYDEBUG: External storage path = " + PlayerPrefs.GetString ("EXTERNAL_STORAGE_PATH"));
 #if !UNITY_EDITOR
 		AndroidJavaClass clazz = new AndroidJavaClass("com.inappertising.ads.UnityPlugin");
 		clazz.CallStatic("initialize", getCurrentActivity(), debug, flurryKey);
 		#endif
         }
 
-        public static void PreloadVideo() {
-            MyDebug.Log("PreloadVideo start");
-            stateVideo = State.Loading;
-#if !UNITY_EDITOR
-		AndroidJavaClass clazz = new AndroidJavaClass("com.inappertising.ads.UnityPlugin");
-		clazz.CallStatic("preloadVideo", getCurrentActivity());
-		#else
-            stateVideo = State.LoadingFailed;
-#endif
-        }
+        public static void Finish()
+        {
 
-        public static void ShowVideo() {
-            MyDebug.Log("ShowVideo start");
-            stateVideo = State.Idle;
 #if !UNITY_EDITOR
-		AndroidJavaClass clazz = new AndroidJavaClass("com.inappertising.ads.UnityPlugin");
-		clazz.CallStatic("showVideo", getCurrentActivity());
-		#endif
-            PreloadVideo();
-        }
-
-        public static void setVideoListener() {
-#if !UNITY_EDITOR
-		AndroidJavaClass clazz = new AndroidJavaClass("com.inappertising.ads.UnityPlugin");
-		clazz.CallStatic("setVideoScreenListener", new VideoListener());
+		AndroidJavaClass clazz = new AndroidJavaClass("com.jm.Mahjong.SDKProxy");
+		clazz.CallStatic("finish", getCurrentActivity());
 		#endif
         }
 
-        /*
-	public static void PreloadFullscreen() {
-		MyDebug.Log ("MYDEBUG: PreloadFullscreen start");
-		stateFullScreen = State.Loading;
-		#if !UNITY_EDITOR
-		AdSDK.setFullscreenListener (fullscreenListener);
-		AndroidJavaClass clazz = new AndroidJavaClass("com.inappertising.ads.UnityPlugin");
-		clazz.CallStatic("preloadFullscreen", getCurrentActivity());
-		#else
-		stateFullScreen = State.LoadingFailed;
-		#endif
-	}
-	*/
+//	static float TIME = 0;
+        public static void ShowOrPreloadVideo()
+        {
 
-        public static void TryShowFullscreen() {
-            ShowFullscreen();
-            /*
-		MyDebug.Log ("MYDEBUG: AdSDK.stateFullScreen = " + AdSDK.stateFullScreen);
-		switch (AdSDK.stateFullScreen) {
-		case AdSDK.State.Ready:
-			ShowFullscreen ();
-			PreloadFullscreen();
-			break;
-		default:
-			PreloadFullscreen ();
-			break;
-		}*/
+#if !UNITY_EDITOR
+		AndroidJavaClass clazz = new AndroidJavaClass("com.jm.Mahjong.SDKProxy");
+		clazz.CallStatic("ShowOrPreload", getCurrentActivity());
+		#endif
         }
 
-        public static void ShowFullscreen() {
-            MyDebug.Log("ShowFullscreen start");
+        public static void PreloadVideo()
+        {
+
+#if !UNITY_EDITOR
+		AndroidJavaClass clazz = new AndroidJavaClass("com.jm.Mahjong.SDKProxy");
+		clazz.CallStatic("Preload", getCurrentActivity());
+		#endif
+        }
+
+        public static void ShowFullscreen()
+        {
+
 #if !UNITY_EDITOR
 		AndroidJavaClass clazz = new AndroidJavaClass("com.inappertising.ads.UnityPlugin");
 		clazz.CallStatic("showFullScreenOrPreload", getCurrentActivity());
 		#endif
         }
 
-        /*
-	public static void setFullscreenListenerIfHavenot(FullscreenListener fsl) {
-		#if !UNITY_EDITOR
-		AndroidJavaClass clazz = new AndroidJavaClass("com.inappertising.ads.UnityPlugin");
-		clazz.CallStatic("setFullscreenListenerIfHavenot", fsl);
-		#endif
-	}*/
-/*
-	public static void setFullscreenListener(FullscreenListener fsl) {
-		#if !UNITY_EDITOR
-		AndroidJavaClass clazz = new AndroidJavaClass("com.inappertising.ads.UnityPlugin");
-		clazz.CallStatic("setFullScreenListener", getCurrentActivity(), fsl);
-		#endif
-	}
-	*/
-
-        public static void StartDebug() {
+        public static void StartDebug()
+        {
 #if !UNITY_EDITOR
 		AndroidJavaObject param = BuildBannerParams(placementFKey);  
 		AndroidJavaClass clazz = new AndroidJavaClass("com.inappertising.ads.UnityPlugin");
@@ -139,14 +103,16 @@ namespace Assets.Scripts.AdSDK {
         }
 
 
-        public static void StopDebug() {
+        public static void StopDebug()
+        {
 #if !UNITY_EDITOR
 		AndroidJavaClass clazz = new AndroidJavaClass("com.inappertising.ads.UnityPlugin");
 		clazz.CallStatic("stopDebug", getCurrentActivity());    
 		#endif
         }
 
-        public static void DestroyBanner() {
+        public static void DestroyBanner()
+        {
             bannerActive = false;
 #if !UNITY_EDITOR
 		AndroidJavaClass clazz = new AndroidJavaClass("com.inappertising.ads.UnityPlugin");
@@ -155,7 +121,8 @@ namespace Assets.Scripts.AdSDK {
         }
 
 
-        private static AndroidJavaObject BuildBannerParams(string placement) {
+        private static AndroidJavaObject BuildBannerParams(string placement)
+        {
 #if !UNITY_EDITOR
 		AndroidJavaObject obj = GetParams();
 		obj.Call<AndroidJavaObject>("setPlacementKey", placement);
@@ -169,7 +136,8 @@ namespace Assets.Scripts.AdSDK {
         }
 
 
-        private static AndroidJavaObject GetParams() {
+        private static AndroidJavaObject GetParams()
+        {
 #if !UNITY_EDITOR
 		AndroidJavaObject obj = new AndroidJavaObject("com.inappertising.ads.ad.AdParametersBuilder");
 		obj.Call<AndroidJavaObject>("setPublisherId", publisherId);
@@ -184,7 +152,8 @@ namespace Assets.Scripts.AdSDK {
 #endif
         }
 
-        public static void CreateBanner() {
+        public static void CreateBanner()
+        {
             bannerActive = true;
 #if !UNITY_EDITOR
 		AndroidJavaObject param = BuildBannerParams(placementRKey);
@@ -193,11 +162,45 @@ namespace Assets.Scripts.AdSDK {
 		#endif
         }
 
-        public static void SetBannerVisible(bool visible) {
-            if (visible && !bannerActive) {
-                CreateBanner();
+        public static void SetBannerVisible(bool visible, bool top = false, int width = 320, int height = 50)
+        {
+            if (visible)
+            {
+                if (bannerActive)
+                {
+                    if (top != (alignment == BannerAlignment.TOP))
+                    {
+                        DestroyBanner();
+                        bannerWidth = width;
+                        bannerHeight = height;
+                        if (top)
+                        {
+                            alignment = BannerAlignment.TOP;
+                        }
+                        else
+                        {
+                            alignment = BannerAlignment.BOTTOM;
+                        }
+                        CreateBanner();
+                    }
+                }
+                else
+                {
+                    bannerWidth = width;
+                    bannerHeight = height;
+                    if (top)
+                    {
+                        alignment = BannerAlignment.TOP;
+                    }
+                    else
+                    {
+                        alignment = BannerAlignment.BOTTOM;
+                    }
+                    CreateBanner();
+                }
             }
-            if (!visible && bannerActive) {
+            if (!visible && bannerActive)
+            {
                 DestroyBanner();
             }
             //#if !UNITY_EDITOR
@@ -206,7 +209,8 @@ namespace Assets.Scripts.AdSDK {
             //#/endif
         }
 
-        private static AndroidJavaObject getCurrentActivity() {
+        private static AndroidJavaObject getCurrentActivity()
+        {
 #if !UNITY_EDITOR
 		AndroidJavaClass ajc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
 		AndroidJavaObject activity = ajc.GetStatic<AndroidJavaObject>("currentActivity");
@@ -218,7 +222,8 @@ namespace Assets.Scripts.AdSDK {
 
         // Analytics methods
 
-        public static void StartFlurrySession() {
+        public static void StartFlurrySession()
+        {
 #if !UNITY_EDITOR
 		AndroidJavaClass clazz = new AndroidJavaClass("com.inappertising.ads.UnityPlugin");
 		AndroidJavaObject param = BuildBannerParams(placementVRKey);
@@ -226,42 +231,48 @@ namespace Assets.Scripts.AdSDK {
 		#endif
         }
 
-        public static void StopFlurrySession() {
+        public static void StopFlurrySession()
+        {
 #if !UNITY_EDITOR
 		AndroidJavaClass clazz = new AndroidJavaClass("com.inappertising.ads.UnityPlugin");
 		clazz.CallStatic("onStop", getCurrentActivity());
 		#endif
         }
 
-        private static void SendDownload() {
+        private static void SendDownload()
+        {
 #if !UNITY_EDITOR
 		AndroidJavaClass clazz = new AndroidJavaClass("com.inappertising.ads.UnityPlugin");
 		clazz.CallStatic("sendDownload", getCurrentActivity(), publisherId, affId, appKey);
 		#endif
         }
 
-        public static void SendConversion() {
+        public static void SendConversion()
+        {
 #if !UNITY_EDITOR
 		AndroidJavaClass clazz = new AndroidJavaClass("com.inappertising.ads.UnityPlugin");
 		clazz.CallStatic("sendConversion", getCurrentActivity(), publisherId, affId, appKey);
 		#endif
         }
 
-        public static void SendEvent(string someEvent) {
+        public static void SendEvent(string someEvent)
+        {
 #if !UNITY_EDITOR
 		AndroidJavaClass clazz = new AndroidJavaClass("com.inappertising.ads.UnityPlugin");
 		clazz.CallStatic("sendCustomEvent", getCurrentActivity(), publisherId, affId, appKey, someEvent);
 		#endif
         }
 
-        public static void listenForInstall(string packageName, string eventName) {
+        public static void listenForInstall(string packageName, string eventName)
+        {
 #if !UNITY_EDITOR
 		AndroidJavaClass clazz = new AndroidJavaClass("com.inappertising.ads.UnityPlugin");
 		clazz.CallStatic("listenForInstall", getCurrentActivity(), packageName, eventName, publisherId, affId, appKey);
 		#endif
         }
 
-        public static void StartSDK(bool debug = true) {
+        public static void StartSDK(bool debug = true)
+        {
 #if !UNITY_EDITOR
 		if (isFirstLaunch) {
 			Init (debug);
@@ -276,113 +287,33 @@ namespace Assets.Scripts.AdSDK {
 		#endif
         }
 
-        public enum State {
+        public enum State
+        {
             LoadingFailed,
             Loading,
             Ready,
             Idle
         }
 
-        /*
-	public static State stateFullScreen = State.Idle;
+        public static State stateVideo
+        {
+            get
+            {
+                int val = PlayerPrefs.GetInt("VIDEO_STATE");
+                if (val == 1) return State.Loading;
+                if (val == 2) return State.LoadingFailed;
+                if (val == 3) return State.Ready;
+                return State.Idle;
+            }
+        }
 
-	public class FullscreenListener : AndroidJavaProxy {
-
-//
-//        void onAdClick(Interstitial ad);
-//
-//        void onDismiss(Interstitial ad);
-//
-//		void onAdLoaded(Interstitial ad);
-//
-//        void onAdLoadFailed(Interstitial ad, ErrorCode errorCode);
-//
-//        void onAdReady(Interstitial ad);
-//
-//        void onAdReadyFailed(Interstitial ad, ErrorCode errorCode);
-//
-
-		public FullscreenListener() : base("com.inappertising.ads.Interstitial$InterstitialUnityListener") { 
-			MyDebug.Log("FullscreenListener created");
-		}
-		void onAdClick(){
-			MyDebug.Log("FullscreenListener onAdClick");
-		}
-		void onDismiss(){
-			MyDebug.Log("FullscreenListener onDismiss");
-		}
-		void onAdLoaded(){
-			MyDebug.Log("ShowFullscreen onAdLoad");
-		}
-		void onAdLoadFailed(){
-			MyDebug.Log("ShowFullscreen onAdLoadFailed");
-		}
-		void onAdReady(){
-			MyDebug.Log("ShowFullscreen onAdReady");
-			AdSDK.stateFullScreen = State.Ready;
-		}
-		void onAdReadyFailed(){
-			MyDebug.Log("ShowFullscreen onAdReadyFailed");
-			AdSDK.stateFullScreen = State.LoadingFailed;
-		}
-	}
-	*/
-        public static State stateVideo = State.Idle;
-        public static int count = 2;
+        public static int count = 1;
         public static bool forWatch = false;
         public static bool forDouble = false;
-        /*
-#if !UNITY_EDITOR
-	public static FullscreenListener fullscreenListener {
-		get {
-			if (_fullLis == null) {
-				_fullLis = new FullscreenListener ();
-			}
-			return _fullLis;
-		}
-	}
-	static FullscreenListener _fullLis;
-#endif
-*/
 
-        class VideoListener : AndroidJavaProxy {
-            public VideoListener() : base("com.inappertising.ads.Video$VideoAdListener") {
-                MyDebug.Log("VideoListener created");
-                count = 2;
-            }
+        public static void onDismissVideo()
+        {
 
-            void onAdFailedToLoad(System.String reason) {
-                if (count > 0) {
-                    MyDebug.Log("Preload video after failing (" + count + ")");
-                    PreloadVideo();
-                    count --;
-                } else {
-                    stateVideo = State.LoadingFailed;
-                }
-                MyDebug.Log("ShowVideo onAdLoadFailed " + reason);
-            }
-
-            void onAdLoaded() {
-                count = 2;
-                stateVideo = State.Ready;
-                MyDebug.Log("ShowVideo onAdLoaded");
-            }
-
-            void onDismiss() {
-//			if (forDouble) {			
-//				InfoTopManager.inst.ShowMessage (Texts.GetText (WhatText.CongrYouHaveDouble));
-//				forDouble = false;
-//				MahjongManager.staticWinPopap.money.text = "+" + (2*MahjongManager.moneyWin);
-//				SoomlaManager.AddMoney (MahjongManager.moneyWin);
-//				SendEvent ("FREE_COINS_DOUBLE_VIDEO");
-//			}
-//			if (forWatch) {
-//				SoomlaManager.AddFreeMoney (PlayerInfo.Shop.FREE_VIDEO);
-//				InfoTopManager.inst.ShowMessage ("+" + PlayerInfo.Shop.FREE_VIDEO + Texts.GetText (WhatText.CoinsTakeForVideoInfo));
-//				forWatch = false;
-//			}
-                MyDebug.Log("ShowVideo onDismiss");
-            }
         }
 #endif
     }

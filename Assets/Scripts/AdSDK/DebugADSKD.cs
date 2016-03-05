@@ -1,26 +1,26 @@
 ﻿using UnityEngine;
+using System.Collections;
+using Assets.Scripts.AdSDK;
 
-namespace Assets.Scripts.AdSDK {
-    public class DebugADSKD : MonoBehaviour {
-        public static DebugADSKD inst;
-        void Start()
-        {
-            inst = this;
-            DontDestroyOnLoad (gameObject);
-        }
-
+public class DebugADSKD : MonoBehaviour {
+	public static DebugADSKD inst;
+	void Start()
+	{
+		inst = this;
+		DontDestroyOnLoad (gameObject);
+	}
 #if UNITY_ANDROID
-	void OnApplicationPause(bool pauseStatus) {
-		if(pauseStatus)
-		{
-			AdSDK.StartDebug();
+	public void ListenForShow () {
+		StartCoroutine (Listen ());
+	}
+
+	IEnumerator Listen () {
+		while (PlayerPrefs.GetInt ("VIDEO_SHOW_OK") == 0) {
+			
+			yield return new WaitForSeconds (1f);
 		}
-		else
-		{
-			AdSDK.StopDebug();
-		}
+		AdSDK.onDismissVideo ();
+		PlayerPrefs.SetInt ("VIDEO_SHOW_OK", 0);
 	}
 #endif
-
-    }
 }

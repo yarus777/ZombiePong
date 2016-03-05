@@ -26,13 +26,14 @@
             _popupsStack = new Stack<Popup>();
         }
 
-        public void Show(PopupType type) {
+        public Popup Show(PopupType type) {
             var popup = _popups.First(x => x.Type == type);
             popup.Popup.gameObject.SetActive(true);
             popup.Popup.transform.SetAsLastSibling();
             popup.Popup.OnShow();
             _popupsStack.Push(popup.Popup);
             CorrectShade();
+            return popup.Popup;
         }
 
         public void Close() {
@@ -60,11 +61,11 @@
                 }
             }
         }
+    }
 
-        [Serializable]
-        private class PopupItem {
-            public PopupType Type;
-            public Popup Popup;
-        }
+    [Serializable]
+    class PopupItem {
+        public PopupType Type;
+        public Popup Popup;
     }
 }

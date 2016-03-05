@@ -33,7 +33,15 @@
         }
 
         private void InitPosition() {
-            _transform.rotation = Quaternion.Euler(0, 0, _initialRotation);
+            if (GameLogic2d.Instance.IsFirstRun)
+            {
+                _transform.rotation = Quaternion.Euler(0, 0, _initialRotation);
+            }
+            else
+            {                
+                _transform.rotation = Quaternion.Euler(0, 0, 110);
+            } 
+           
         }
 
         private void Init() {
