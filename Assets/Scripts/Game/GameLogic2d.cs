@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts.Game {
+﻿using UnityEngine.UI;
+
+namespace Assets.Scripts.Game {
     using System;
     using Popups;
     using Tutorials;
@@ -93,7 +95,8 @@
 
         #region GAME LOGIC
 
-        private void StartGame() {
+        private void StartGame()
+        {
             _currentScore = 0;
             GameSpeed = initialGameSpeed;
             OnStateChanged(State.Init);

@@ -19,7 +19,9 @@
 		TutorialText3,
         PauseText,
         UpdateText,
-        UpdateButtonText
+        UpdateButtonText,
+        TimeText,
+        TimerText
 		
     }
 
@@ -47,7 +49,9 @@
 			{"Zombie mustn't lose his eye in space! Keep it inside his space suit.","Помоги зомби не потерять его глаз в открытом космосе! Удержи его в скафандре."},
             {"Pause","Пауза"},           
             {"New version is available! Download it here!","Доступна новая версия! Обновитесь здесь!"},
-            {"Update", "Обновить"}
+            {"Update", "Обновить"},
+            {"Time","Время"},
+            {"Timer","Таймер"}
         };
 
         public static string GetText (WhatText what)

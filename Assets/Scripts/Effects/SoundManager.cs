@@ -59,13 +59,11 @@
             fx.Play();
         }
 
-        // при старте загружаем данные о звуках
         private void Load() {
             IsFx = PlayerPrefs.GetInt(FX_KEY, 1) == 1;
             IsMusic = PlayerPrefs.GetInt(MUSIC_KEY, 1) == 1;
         }
 
-        // при любом изменении - сохраняем
         private void SaveFX() {
             PlayerPrefs.SetInt(FX_KEY, IsFx ? 1 : 0);
         }
