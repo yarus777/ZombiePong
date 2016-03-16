@@ -21,7 +21,9 @@
         UpdateText,
         UpdateButtonText,
         TimeText,
-        TimerText
+        TimerText,
+        LaterText, 
+        RateUsText
 		
     }
 
@@ -51,7 +53,9 @@
             {"New version is available! Download it here!","Доступна новая версия! Обновитесь здесь!"},
             {"Update", "Обновить"},
             {"Time","Время"},
-            {"Timer","Таймер"}
+            {"Timer","Таймер"},
+            {"Later", "Позже"},
+            {"Rate us", "Оцените нас"}
         };
 
         public static string GetText (WhatText what)

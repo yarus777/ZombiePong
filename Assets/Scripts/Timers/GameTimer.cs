@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Timers
 {
-    class GameTimer : MonoBehaviour
+    public class GameTimer : MonoBehaviour
     {
         public Text timerLabel;
         public float time;
@@ -27,6 +27,11 @@ namespace Assets.Scripts.Timers
                 var seconds = time%60;
                 timerLabel.text = string.Format("{0:00} : {1:00}", minutes, seconds);
             }
+
+            if (PlayerPrefs.GetInt("timer", 1) == 0)
+                timerLabel.gameObject.SetActive(false);
+            else
+                timerLabel.gameObject.SetActive(true);
         }
 
         public void StopTimer()
@@ -36,13 +41,11 @@ namespace Assets.Scripts.Timers
 
         void Awake()
         {
-            if (PlayerPrefs.GetInt("timer", 1) == 0)
-                timerLabel.gameObject.SetActive(false);
-            else
-                timerLabel.gameObject.SetActive(true);
+            
             _game = GameLogic2d.Instance;
             _game.StateChanged += OnStateChanged;
         }
+
 
         private void OnStateChanged(GameLogic2d.State state)
         {

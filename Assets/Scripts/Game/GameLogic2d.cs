@@ -1,4 +1,6 @@
-﻿using UnityEngine.UI;
+﻿
+using Assets.Scripts.Timers;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.Game {
     using System;
@@ -43,6 +45,8 @@ namespace Assets.Scripts.Game {
         public event Action<int> ScoreChanged;
 
         private bool _fired;
+
+        public GameTimer timer;
 
         void Awake() {
             Instance = this;

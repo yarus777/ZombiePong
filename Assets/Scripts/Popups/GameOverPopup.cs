@@ -20,11 +20,29 @@ namespace Assets.Scripts.Popups {
 
         [SerializeField]
         private LoadLevel _loadLevel;
+      
+        public GameObject timepanel;
 
-        public GameTimer timer; 
+        public GameObject scorepanel;
 
-        public override void OnShow() {
+        public override void OnShow()
+        {
             base.OnShow();
+
+            if (PlayerPrefs.GetInt("timer", 1) == 0)
+            {
+
+                timepanel.gameObject.SetActive(false);
+                scorepanel.transform.localPosition = new Vector3(0, -91, 0);              
+                
+            }
+            else
+            {
+                timepanel.gameObject.SetActive(true);
+                scorepanel.transform.localPosition = new Vector3(0, -156, 0);
+                
+            }
+
             _scoreText.text = GameLogic2d.Instance.GetCurrentScore() + "";
             _highScoreText.text = GameLogic2d.Instance.GetBestScore() + "";
 
@@ -37,8 +55,8 @@ namespace Assets.Scripts.Popups {
 
         private void ShowTime()
         {
-            var minutes = timer.time / 60;
-            var seconds = timer.time % 60;
+            var minutes = GameLogic2d.Instance.timer.time / 60;
+            var seconds = GameLogic2d.Instance.timer.time % 60;
             timeText.text = string.Format("{0:00} : {1:00}", minutes, seconds);
         }
 
